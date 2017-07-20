@@ -10,11 +10,33 @@ jobs:
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
       - image: redis:3.2.9
-      - image: elasticsearch:2.3
-        command: [cp, /usr/share/zoneinfo/Asia/Tokyo, /etc/localtime]
     parallelism: 2
     working_directory: /my-app
     steps:
+      - run: - sudo curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
+      - run: >
+        if [[ ! -e mecab-0.996/src/mecab ]]; then
+          wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE" &&
+          tar xvzf mecab-0.996.tar.gz &&
+          cd mecab-0.996 &&
+          ./configure --enable-utf8-only &&
+          make
+        fi
+      - run: >
+        cd mecab-0.996 &&
+        sudo make install &&
+        sudo ldconfig
+      - run: >
+        if [[ ! -e mecab-ipadic-2.7.0-20070801/sys.dic ]]; then
+          wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM" &&
+          tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz &&
+          cd mecab-ipadic-2.7.0-20070801 &&
+          ./configure --with-charset=utf8 &&
+          make
+        fi
+      - run: >
+        cd mecab-ipadic-2.7.0-20070801 &&
+        sudo make install
       - checkout
       - run: apt-get update -qq && apt-get install -y build-essential nodejs
       - restore_cache:
