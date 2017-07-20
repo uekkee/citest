@@ -46,6 +46,14 @@ jobs:
       - save_cache:
           key: bundle-{{ checksum "Gemfile" }}
           paths: vendor/bundle
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "package.json" }}
+            - node_modules
+      - run: cd client && npm i
+      - save_cache:
+          key: node_modules-{{ checksum "Gemfile" }}
+          paths: client/node_modules
       - run: RAILS_ENV=test bundle exec rails db:create db:schema:load
       - run:
           name: RSpec
