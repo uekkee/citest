@@ -18,14 +18,7 @@ jobs:
           keys:
             - mecab
             - elasticsearch
-      - run: |
-        if [[ ! -e mecab-0.996/src/mecab ]]; then \
-          wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE" && \
-          tar xvzf mecab-0.996.tar.gz && \
-          cd mecab-0.996 && \
-          ./configure --enable-utf8-only && \
-          make \
-        ;fi
+      - run: if [[ ! -e mecab-0.996/src/mecab ]]; then wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE" && tar xvzf mecab-0.996.tar.gz && cd mecab-0.996 && ./configure --enable-utf8-only && make ;fi
       - run: |
         cd mecab-0.996 && \
         sudo make install && \
