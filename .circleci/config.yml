@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ruby:2.3.3
+        environment:
+          DB_HOST: 127.0.0.1
+      - image: mysql:5.7
+        environment:
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    parallelism: 2
+    working_directory: /my-app
+    steps:
+      - checkout
+      - run: apt-get update -qq && apt-get install -y build-essential nodejs
+      - restore_cache:
+          keys:
+            - bundle-{{ checksum "Gemfile" }}
+            # if cache for exact version of `Gemfile` is not present then load any most recent one
+            - bundle
+      - run: bundle install --path=vendor/bundle
+      - save_cache:
+          key: bundle-{{ checksum "Gemfile" }}
+          paths: vendor/bundle
+      - run: RAILS_ENV=test bundle exec rails db:create db:schema:load
+      - run:
+          name: RSpec
+          command: |
+            circleci tests glob \
+            spec/models/**/*.rb \
+            circleci tests split | \
+            xargs bundle exec rspec
