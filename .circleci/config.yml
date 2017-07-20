@@ -10,12 +10,10 @@ jobs:
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
       - image: redis:3.2.9
+      - image: uekkee/elasticsearch_custom:2.3
     parallelism: 2
     working_directory: /my-app
     steps:
-      - run:
-          name: apt-get for java
-          command: apt-get update && apt-get install -y openjdk-7-jdk
       - run:
           name: apt-get for js essentials
           command: apt-get install -y build-essential nodejs
@@ -23,7 +21,6 @@ jobs:
       - restore_cache:
           keys:
             - mecab
-            - elasticsearch
       - run: if [[ ! -e mecab-0.996/src/mecab ]]; then wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE" && tar xvzf mecab-0.996.tar.gz && cd mecab-0.996 && ./configure --enable-utf8-only && make ;fi
       - run: cd mecab-0.996 && make install && ldconfig
       - run: if [[ ! -e mecab-ipadic-2.7.0-20070801/sys.dic ]]; then wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM" && tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz && cd mecab-ipadic-2.7.0-20070801 && ./configure --with-charset=utf8 && make ;fi
@@ -33,12 +30,9 @@ jobs:
             - mecab-0.996
             - mecab-ipadic-2.7.0-20070801
       - run: cd mecab-ipadic-2.7.0-20070801 && make install
-      - run: if [[ ! -e elasticsearch-2.3.2 ]]; then wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-2.3.2.tar.gz && tar -xvf elasticsearch-2.3.2.tar.gz && elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && elasticsearch-2.3.2/bin/plugin install analysis-icu ;fi
-      - save_cache:
-          key: elasticsearch
-          paths: elasticsearch-2.3.2
-      - run: elasticsearch-2.3.2/bin/elasticsearch -d
-      - run: sleep 10 && wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
+      - run:
+          name: wait for elasticsearch
+          command: wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
       - checkout
       - restore_cache:
           keys:
