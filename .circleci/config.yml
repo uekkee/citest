@@ -13,7 +13,7 @@ jobs:
     parallelism: 2
     working_directory: /my-app
     steps:
-      - run: - sudo curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
+      - run: sudo curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
       - restore_cache:
           keys:
             - mecab
