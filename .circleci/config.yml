@@ -30,7 +30,8 @@ jobs:
       - run: if [[ ! -e elasticsearch-2.3.2 ]]; then wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-2.3.2.tar.gz && tar -xvf elasticsearch-2.3.2.tar.gz && elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && elasticsearch-2.3.2/bin/plugin install analysis-icu ;fi
       - save_cache:
           key: elasticsearch
-          paths: elasticsearch-2.3.2
+          paths:
+            - elasticsearch-2.3.2
       - run: elasticsearch-2.3.2/bin/elasticsearch: {background: true}
       - run: sleep 10 && wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
       - checkout
