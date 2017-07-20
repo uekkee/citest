@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ruby:2.3.3
+      - image: circleci/ruby:2.3.3
         environment:
           DB_HOST: 127.0.0.1
       - image: mysql:5.7
@@ -12,7 +12,6 @@ jobs:
       - image: redis:3.2.9
       - image: uekkee/elasticsearch_custom:2.3
     parallelism: 2
-    working_directory: /my-app
     steps:
       - checkout
       - run:
