@@ -19,15 +19,18 @@ jobs:
             - mecab
             - elasticsearch
       - run: if [[ ! -e mecab-0.996/src/mecab ]]; then wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE" && tar xvzf mecab-0.996.tar.gz && cd mecab-0.996 && ./configure --enable-utf8-only && make ;fi
-      - run: cd mecab-0.996 && sudo make install && sudo ldconfig
+      - run: cd mecab-0.996 && make install && ldconfig
       - run: if [[ ! -e mecab-ipadic-2.7.0-20070801/sys.dic ]]; then tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz && cd mecab-ipadic-2.7.0-20070801 && ./configure --with-charset=utf8 && make ;fi
       - save_cache:
           key: mecab
           paths:
             - mecab-0.996
             - mecab-ipadic-2.7.0-20070801
-      - run: cd mecab-ipadic-2.7.0-20070801 && sudo make install
+      - run: cd mecab-ipadic-2.7.0-20070801 && make install
       - run: if [[ ! -e elasticsearch-2.3.2 ]]; then wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-2.3.2.tar.gz && tar -xvf elasticsearch-2.3.2.tar.gz && elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && elasticsearch-2.3.2/bin/plugin install analysis-icu ;fi
+      - save_cache:
+          key: elasticsearch
+          paths: elasticsearch-2.3.2
       - run: elasticsearch-2.3.2/bin/elasticsearch -d
       - run: sleep 10 && wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
       - checkout
