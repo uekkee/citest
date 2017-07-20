@@ -27,6 +27,7 @@ jobs:
             - mecab-0.996
             - mecab-ipadic-2.7.0-20070801
       - run: cd mecab-ipadic-2.7.0-20070801 && make install
+      - run: apt-get install openjdk-8-jdk
       - run: if [[ ! -e elasticsearch-2.3.2 ]]; then wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-2.3.2.tar.gz && tar -xvf elasticsearch-2.3.2.tar.gz && elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && elasticsearch-2.3.2/bin/plugin install analysis-icu ;fi
       - save_cache:
           key: elasticsearch
