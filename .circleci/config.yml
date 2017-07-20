@@ -16,7 +16,7 @@ jobs:
     steps:
       - run:
           name: apt-get for js essentials
-          command: apt-get install -y build-essential nodejs
+          command: apt-get update -qq && apt-get install -y build-essential nodejs
       - run: curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
       - restore_cache:
           keys:
