@@ -48,6 +48,6 @@ jobs:
           name: RSpec
           command: |
             circleci tests glob \
-            spec/models/**/*.rb \
+            spec/models/**/*.rb | \
             circleci tests split | \
             xargs bundle exec rspec
