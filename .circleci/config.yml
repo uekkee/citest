@@ -9,6 +9,7 @@ jobs:
         environment:
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      - image: redis:3.2.9
     parallelism: 2
     working_directory: /my-app
     steps:
