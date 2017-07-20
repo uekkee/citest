@@ -25,7 +25,7 @@ jobs:
           cd mecab-0.996 && \
           ./configure --enable-utf8-only && \
           make \
-        fi
+        ;fi
       - run: |
         cd mecab-0.996 && \
         sudo make install && \
@@ -36,7 +36,7 @@ jobs:
           cd mecab-ipadic-2.7.0-20070801 && \
           ./configure --with-charset=utf8 && \
           make \
-        fi
+        ;fi
       - save_cache:
           key: mecab
           paths:
@@ -51,7 +51,7 @@ jobs:
           tar -xvf elasticsearch-2.3.2.tar.gz && \
           elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && \
           elasticsearch-2.3.2/bin/plugin install analysis-icu \
-        fi
+        ;fi
       - save_cache:
           key: elasticsearch
           paths: elasticsearch-2.3.2
