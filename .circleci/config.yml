@@ -16,11 +16,11 @@ jobs:
       - checkout
       - run:
           name: apt-get for js essentials
-          command: apt-get update -qq && apt-get install -y build-essential nodejs npm && npm install n -g
+          command: sudo apt-get update -qq && sudo apt-get install -y build-essential nodejs npm && sudo npm install n -g
       - run:
           name: install node
           command: n 6.9.1
-      - run: curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
+      - run: sudo curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
       - restore_cache:
           keys:
             - mecab
