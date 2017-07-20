@@ -14,6 +14,7 @@ jobs:
     parallelism: 2
     working_directory: /my-app
     steps:
+      - checkout
       - run:
           name: apt-get for js essentials
           command: apt-get update -qq && apt-get install -y build-essential nodejs
@@ -33,7 +34,6 @@ jobs:
       - run:
           name: wait for elasticsearch
           command: wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
-      - checkout
       - restore_cache:
           keys:
             - bundle-{{ checksum "Gemfile" }}
