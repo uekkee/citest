@@ -13,6 +13,12 @@ jobs:
     parallelism: 2
     working_directory: /my-app
     steps:
+      - run:
+          name: apt-get for java
+          command: apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:openjdk-r/ppa && apt-get update && apt-get install -y openjdk-8-jdk
+      - run:
+          name: apt-get for js essentials
+          command: apt-get install -y build-essential nodejs
       - run: curl --output /usr/local/bin/phantomjs https://s3.amazonaws.com/circle-downloads/phantomjs-2.1.1
       - restore_cache:
           keys:
@@ -27,7 +33,6 @@ jobs:
             - mecab-0.996
             - mecab-ipadic-2.7.0-20070801
       - run: cd mecab-ipadic-2.7.0-20070801 && make install
-      - run: apt-get update && apt-get install python-software-properties software-properties-common && add-apt-repository ppa:openjdk-r/ppa && apt-get update && apt-get install openjdk-8-jdk
       - run: if [[ ! -e elasticsearch-2.3.2 ]]; then wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-2.3.2.tar.gz && tar -xvf elasticsearch-2.3.2.tar.gz && elasticsearch-2.3.2/bin/plugin install analysis-kuromoji && elasticsearch-2.3.2/bin/plugin install analysis-icu ;fi
       - save_cache:
           key: elasticsearch
@@ -35,7 +40,6 @@ jobs:
       - run: elasticsearch-2.3.2/bin/elasticsearch -d
       - run: sleep 10 && wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
       - checkout
-      - run: apt-get update -qq && apt-get install -y build-essential nodejs
       - restore_cache:
           keys:
             - bundle-{{ checksum "Gemfile" }}
